@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,9 +16,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.teal),
         useMaterial3: true,
-        textTheme: const TextTheme(
-          bodyMedium: TextStyle(fontSize: 16, color: Colors.black87),
-        ),
+        fontFamily: "Roboto",
       ),
       home: const MyHomePage(title: 'Marondera Municipality'),
     );
@@ -62,52 +61,55 @@ class _MyHomePageState extends State<MyHomePage>
     setState(() {
       _searchQuery = query;
     });
-    debugPrint("Searching for: $query");
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // ✅ Pro AppBar
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(75),
-        child: AppBar(
-          elevation: 6,
-          backgroundColor: Colors.teal,
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(
-              bottom: Radius.circular(24),
+      // ✅ Gradient AppBar
+      appBar: AppBar(
+        elevation: 0,
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Colors.teal, Colors.greenAccent],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
             ),
           ),
-          leading: IconButton(
-            icon: const Icon(Icons.menu, color: Colors.white),
-            onPressed: () => Scaffold.of(context).openDrawer(),
-          ),
-          title: Text(
-            widget.title,
-            style: const TextStyle(
-              fontWeight: FontWeight.w700,
-              color: Colors.white,
-              fontSize: 22,
-              letterSpacing: 1.1,
-            ),
-          ),
-          centerTitle: true,
         ),
+        title: Text(
+          widget.title,
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 22,
+            color: Colors.white,
+          ),
+        ),
+        centerTitle: true,
       ),
 
       body: Column(
         children: [
-          // ✅ Modern Search Bar
+          // ✅ Glass-style Search Bar
           Container(
-            padding: const EdgeInsets.all(16),
-            color: Colors.teal.shade50,
+            margin: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(30),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.teal.withOpacity(0.2),
+                  blurRadius: 10,
+                  offset: const Offset(0, 5),
+                ),
+              ],
+            ),
             child: TextField(
               controller: _searchController,
               onSubmitted: _performSearch,
               decoration: InputDecoration(
                 hintText: "Search services, info...",
-                hintStyle: TextStyle(color: Colors.grey.shade600),
                 prefixIcon: const Icon(Icons.search, color: Colors.teal),
                 suffixIcon: _searchController.text.isNotEmpty
                     ? IconButton(
@@ -120,22 +122,15 @@ class _MyHomePageState extends State<MyHomePage>
                         },
                       )
                     : null,
-                filled: true,
-                fillColor: Colors.white,
+                border: InputBorder.none,
                 contentPadding:
                     const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(30),
-                  borderSide: BorderSide(color: Colors.teal.shade200),
-                ),
               ),
-              onChanged: (value) {
-                setState(() {}); // refresh suffix icon
-              },
+              onChanged: (value) => setState(() {}),
             ),
           ),
 
-          // ✅ Tab Views
+          // ✅ Tab Views with Lottie Animations
           Expanded(
             child: TabBarView(
               controller: _tabController,
@@ -145,15 +140,15 @@ class _MyHomePageState extends State<MyHomePage>
                   decoration: const BoxDecoration(
                     gradient: LinearGradient(
                       colors: [Colors.teal, Colors.greenAccent],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
                     ),
                   ),
                   child: Center(
                     child: Card(
                       elevation: 12,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(24),
+                        borderRadius: BorderRadius.circular(20),
                       ),
                       margin: const EdgeInsets.all(24),
                       child: Padding(
@@ -161,11 +156,15 @@ class _MyHomePageState extends State<MyHomePage>
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            const Icon(Icons.location_city,
-                                size: 60, color: Colors.teal),
+                            // ✅ City animation
+                            Lottie.asset(
+                              "assets/animations/city.json",
+                              height: 120,
+                              repeat: true,
+                            ),
                             const SizedBox(height: 16),
                             const Text(
-                              '👋 Welcome to Marondera',
+                              "👋 Welcome to Marondera",
                               style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,
@@ -174,21 +173,17 @@ class _MyHomePageState extends State<MyHomePage>
                             ),
                             const SizedBox(height: 16),
                             Text(
-                              'Counter: $_counter',
+                              "Counter: $_counter",
                               style: const TextStyle(
-                                fontSize: 30,
+                                fontSize: 28,
                                 fontWeight: FontWeight.w600,
-                                color: Colors.black87,
                               ),
                             ),
                             if (_searchQuery.isNotEmpty) ...[
-                              const SizedBox(height: 20),
+                              const SizedBox(height: 16),
                               Text(
                                 "🔍 Results for: $_searchQuery",
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.black87,
-                                ),
+                                style: const TextStyle(fontSize: 16),
                               ),
                             ]
                           ],
@@ -200,28 +195,44 @@ class _MyHomePageState extends State<MyHomePage>
 
                 // INFO TAB
                 Container(
+                  color: Colors.grey.shade100,
                   padding: const EdgeInsets.all(24),
-                  color: Colors.teal.shade50,
-                  child: const Center(
-                    child: Text(
-                      '📢 Information about Marondera Municipality will appear here.',
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.black87,
-                        fontWeight: FontWeight.w500,
-                        height: 1.4,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      // ✅ Info animation
+                      Lottie.asset(
+                        "assets/animations/info.json",
+                        height: 150,
                       ),
-                      textAlign: TextAlign.center,
-                    ),
+                      const SizedBox(height: 20),
+                      const Text(
+                        "📢 Information about Marondera Municipality will appear here.",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.black87,
+                          height: 1.5,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
                   ),
                 ),
 
                 // SETTINGS TAB
                 Container(
-                  color: Colors.grey.shade100,
+                  color: Colors.grey.shade50,
                   child: ListView(
                     padding: const EdgeInsets.all(16),
                     children: [
+                      Center(
+                        child: Lottie.asset(
+                          "assets/animations/settings.json",
+                          height: 120,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
                       const Text(
                         "⚙️ Settings",
                         style: TextStyle(
@@ -230,28 +241,21 @@ class _MyHomePageState extends State<MyHomePage>
                           color: Colors.teal,
                         ),
                       ),
-                      const SizedBox(height: 12),
-                      ListTile(
-                        leading: const Icon(Icons.notifications,
-                            color: Colors.teal),
-                        title: const Text("Notifications"),
+                      const SizedBox(height: 16),
+                      _buildSettingsTile(
+                        icon: Icons.notifications,
+                        title: "Notifications",
                         trailing: Switch(value: true, onChanged: (v) {}),
                       ),
-                      const Divider(),
-                      ListTile(
-                        leading:
-                            const Icon(Icons.language, color: Colors.teal),
-                        title: const Text("Language"),
+                      _buildSettingsTile(
+                        icon: Icons.language,
+                        title: "Language",
                         trailing: const Icon(Icons.chevron_right),
-                        onTap: () {},
                       ),
-                      const Divider(),
-                      ListTile(
-                        leading: const Icon(Icons.privacy_tip,
-                            color: Colors.teal),
-                        title: const Text("Privacy & Security"),
+                      _buildSettingsTile(
+                        icon: Icons.privacy_tip,
+                        title: "Privacy & Security",
                         trailing: const Icon(Icons.chevron_right),
-                        onTap: () {},
                       ),
                     ],
                   ),
@@ -262,18 +266,23 @@ class _MyHomePageState extends State<MyHomePage>
         ],
       ),
 
-      // ✅ Bottom Navigation with Pro Look
+      // ✅ Bottom Navigation
       bottomNavigationBar: Container(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           color: Colors.white,
-          boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 6)],
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 8,
+              offset: const Offset(0, -2),
+            ),
+          ],
         ),
         child: TabBar(
           controller: _tabController,
           labelColor: Colors.teal,
           unselectedLabelColor: Colors.grey,
           indicatorColor: Colors.teal,
-          indicatorWeight: 3,
           tabs: const [
             Tab(icon: Icon(Icons.home), text: "Home"),
             Tab(icon: Icon(Icons.info), text: "Info"),
@@ -282,14 +291,29 @@ class _MyHomePageState extends State<MyHomePage>
         ),
       ),
 
+      // ✅ Floating Action Button
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _incrementCounter,
-        label: const Text("Add"),
         icon: const Icon(Icons.add),
+        label: const Text("Add"),
         backgroundColor: Colors.teal,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
+      ),
+    );
+  }
+
+  Widget _buildSettingsTile({
+    required IconData icon,
+    required String title,
+    required Widget trailing,
+  }) {
+    return Card(
+      elevation: 3,
+      margin: const EdgeInsets.symmetric(vertical: 8),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      child: ListTile(
+        leading: Icon(icon, color: Colors.teal),
+        title: Text(title),
+        trailing: trailing,
       ),
     );
   }
