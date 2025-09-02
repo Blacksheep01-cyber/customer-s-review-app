@@ -62,56 +62,46 @@ class _MyHomePageState extends State<MyHomePage>
     setState(() {
       _searchQuery = query;
     });
-    // TODO: Implement actual search logic
     debugPrint("Searching for: $query");
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // ✅ Clean AppBar
+      // ✅ Pro AppBar
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(70),
+        preferredSize: const Size.fromHeight(75),
         child: AppBar(
-          elevation: 4,
-          backgroundColor: Colors.white,
+          elevation: 6,
+          backgroundColor: Colors.teal,
           shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.vertical(
-              bottom: Radius.circular(20),
+              bottom: Radius.circular(24),
             ),
           ),
-          leading: Builder(
-            builder: (context) => IconButton(
-              icon: const Icon(Icons.menu, color: Colors.teal),
-              onPressed: () => Scaffold.of(context).openDrawer(),
-              tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
-            ),
+          leading: IconButton(
+            icon: const Icon(Icons.menu, color: Colors.white),
+            onPressed: () => Scaffold.of(context).openDrawer(),
           ),
           title: Text(
             widget.title,
             style: const TextStyle(
               fontWeight: FontWeight.w700,
-              color: Colors.teal,
-              fontSize: 20,
+              color: Colors.white,
+              fontSize: 22,
+              letterSpacing: 1.1,
             ),
           ),
           centerTitle: true,
         ),
       ),
 
-      // ✅ Add Search Bar Below AppBar
       body: Column(
         children: [
-          const SizedBox(height: 30), // <-- Add this line to move search bar down
+          // ✅ Modern Search Bar
           Container(
-            padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: [Colors.teal, Colors.greenAccent],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-            ),
+            padding: const EdgeInsets.all(16),
+            color: Colors.teal.shade50,
             child: TextField(
               controller: _searchController,
               onSubmitted: _performSearch,
@@ -131,12 +121,12 @@ class _MyHomePageState extends State<MyHomePage>
                       )
                     : null,
                 filled: true,
-                fillColor: Colors.grey.shade100,
+                fillColor: Colors.white,
                 contentPadding:
                     const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(30),
-                  borderSide: BorderSide.none,
+                  borderSide: BorderSide(color: Colors.teal.shade200),
                 ),
               ),
               onChanged: (value) {
@@ -161,20 +151,23 @@ class _MyHomePageState extends State<MyHomePage>
                   ),
                   child: Center(
                     child: Card(
-                      elevation: 8,
+                      elevation: 12,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: BorderRadius.circular(24),
                       ),
-                      margin: const EdgeInsets.all(20),
+                      margin: const EdgeInsets.all(24),
                       child: Padding(
-                        padding: const EdgeInsets.all(24.0),
+                        padding: const EdgeInsets.all(28.0),
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
+                            const Icon(Icons.location_city,
+                                size: 60, color: Colors.teal),
+                            const SizedBox(height: 16),
                             const Text(
                               '👋 Welcome to Marondera',
                               style: TextStyle(
-                                fontSize: 22,
+                                fontSize: 24,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.teal,
                               ),
@@ -183,7 +176,7 @@ class _MyHomePageState extends State<MyHomePage>
                             Text(
                               'Counter: $_counter',
                               style: const TextStyle(
-                                fontSize: 28,
+                                fontSize: 30,
                                 fontWeight: FontWeight.w600,
                                 color: Colors.black87,
                               ),
@@ -207,6 +200,7 @@ class _MyHomePageState extends State<MyHomePage>
 
                 // INFO TAB
                 Container(
+                  padding: const EdgeInsets.all(24),
                   color: Colors.teal.shade50,
                   child: const Center(
                     child: Text(
@@ -215,6 +209,7 @@ class _MyHomePageState extends State<MyHomePage>
                         fontSize: 18,
                         color: Colors.black87,
                         fontWeight: FontWeight.w500,
+                        height: 1.4,
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -223,27 +218,37 @@ class _MyHomePageState extends State<MyHomePage>
 
                 // SETTINGS TAB
                 Container(
-                  color: Colors.teal.shade50,
+                  color: Colors.grey.shade100,
                   child: ListView(
                     padding: const EdgeInsets.all(16),
                     children: [
+                      const Text(
+                        "⚙️ Settings",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.teal,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
                       ListTile(
-                        leading:
-                            const Icon(Icons.notifications, color: Colors.teal),
+                        leading: const Icon(Icons.notifications,
+                            color: Colors.teal),
                         title: const Text("Notifications"),
                         trailing: Switch(value: true, onChanged: (v) {}),
                       ),
                       const Divider(),
                       ListTile(
-                        leading: const Icon(Icons.language, color: Colors.teal),
+                        leading:
+                            const Icon(Icons.language, color: Colors.teal),
                         title: const Text("Language"),
                         trailing: const Icon(Icons.chevron_right),
                         onTap: () {},
                       ),
                       const Divider(),
                       ListTile(
-                        leading:
-                            const Icon(Icons.privacy_tip, color: Colors.teal),
+                        leading: const Icon(Icons.privacy_tip,
+                            color: Colors.teal),
                         title: const Text("Privacy & Security"),
                         trailing: const Icon(Icons.chevron_right),
                         onTap: () {},
@@ -257,10 +262,12 @@ class _MyHomePageState extends State<MyHomePage>
         ],
       ),
 
-      // ✅ Bottom Navigation
-      bottomNavigationBar: Material(
-        elevation: 10,
-        color: Colors.white,
+      // ✅ Bottom Navigation with Pro Look
+      bottomNavigationBar: Container(
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 6)],
+        ),
         child: TabBar(
           controller: _tabController,
           labelColor: Colors.teal,
@@ -280,6 +287,9 @@ class _MyHomePageState extends State<MyHomePage>
         label: const Text("Add"),
         icon: const Icon(Icons.add),
         backgroundColor: Colors.teal,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
       ),
     );
   }
